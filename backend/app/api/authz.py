@@ -7,8 +7,8 @@ from app.api.deps import CurrentUser
 from app.models import User, UserRole
 
 
-def _raise_forbidden() -> None:
-    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+def _raise_forbidden(detail: str = "Forbidden") -> None:
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
 
 
 def get_effective_role(user: User) -> UserRole:
@@ -49,6 +49,30 @@ def require_self_or_admin(user_id_param: str) -> Callable:
             _raise_forbidden()
         if str(current_user.id) != str(target_user_id):
             _raise_forbidden()
+
+    return dependency
+
+
+def require_non_admin(
+    detail: str = "Super users are not allowed to delete themselves",
+) -> Callable:
+    def dependency(current_user: CurrentUser) -> None:
+        if is_admin_user(current_user):
+            _raise_forbidden(detail)
+
+    return dependency
+
+
+def require_not_self(
+    user_id_param: str,
+    detail: str = "Super users are not allowed to delete themselves",
+) -> Callable:
+    def dependency(request: Request, current_user: CurrentUser) -> None:
+        target_user_id = request.path_params.get(user_id_param)
+        if target_user_id is None:
+            _raise_forbidden()
+        if str(current_user.id) == str(target_user_id):
+            _raise_forbidden(detail)
 
     return dependency
 

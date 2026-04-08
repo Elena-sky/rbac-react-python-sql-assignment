@@ -208,6 +208,46 @@ export const MessageSchema = {
     title: 'Message'
 } as const;
 
+export const MetricsStubPublicSchema = {
+    properties: {
+        status: {
+            type: 'string',
+            title: 'Status'
+        },
+        generated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Generated At'
+        },
+        summary: {
+            '$ref': '#/components/schemas/MetricsSummary'
+        }
+    },
+    type: 'object',
+    required: ['status', 'generated_at', 'summary'],
+    title: 'MetricsStubPublic'
+} as const;
+
+export const MetricsSummarySchema = {
+    properties: {
+        users_total: {
+            type: 'integer',
+            title: 'Users Total'
+        },
+        active_users: {
+            type: 'integer',
+            title: 'Active Users'
+        },
+        reports_generated_today: {
+            type: 'integer',
+            title: 'Reports Generated Today'
+        }
+    },
+    type: 'object',
+    required: ['users_total', 'active_users', 'reports_generated_today'],
+    title: 'MetricsSummary'
+} as const;
+
 export const NewPasswordSchema = {
     properties: {
         token: {

@@ -6,9 +6,10 @@ from sqlmodel import col, delete, func, select
 
 from app import crud
 from app.api.authz import (
-    is_admin_user,
     require_admin,
     require_admin_or_manager,
+    require_non_admin,
+    require_not_self,
     require_self_or_admin,
 )
 from app.api.deps import CurrentUser, SessionDep
@@ -129,15 +130,15 @@ def read_user_me(current_user: CurrentUser) -> Any:
     return current_user
 
 
-@router.delete("/me", response_model=Message)
+@router.delete(
+    "/me",
+    dependencies=[Depends(require_non_admin())],
+    response_model=Message,
+)
 def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Delete own user.
     """
-    if is_admin_user(current_user):
-        raise HTTPException(
-            status_code=403, detail="Super users are not allowed to delete themselves"
-        )
     session.delete(current_user)
     session.commit()
     return Message(message="User deleted successfully")
@@ -206,7 +207,10 @@ def update_user(
     return db_user
 
 
-@router.delete("/{user_id}", dependencies=[Depends(require_admin())])
+@router.delete(
+    "/{user_id}",
+    dependencies=[Depends(require_admin()), Depends(require_not_self("user_id"))],
+)
 def delete_user(
     session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID
 ) -> Message:

@@ -92,6 +92,18 @@ class UsersPublic(SQLModel):
     count: int
 
 
+class MetricsSummary(SQLModel):
+    users_total: int
+    active_users: int
+    reports_generated_today: int
+
+
+class MetricsStubPublic(SQLModel):
+    status: str
+    generated_at: datetime
+    summary: MetricsSummary
+
+
 # Shared properties
 class ItemBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)

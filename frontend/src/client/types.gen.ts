@@ -40,6 +40,18 @@ export type Message = {
     message: string;
 };
 
+export type MetricsStubPublic = {
+    status: string;
+    generated_at: string;
+    summary: MetricsSummary;
+};
+
+export type MetricsSummary = {
+    users_total: number;
+    active_users: number;
+    reports_generated_today: number;
+};
+
 export type NewPassword = {
     token: string;
     new_password: string;
@@ -175,6 +187,8 @@ export type LoginRecoverPasswordHtmlContentData = {
 };
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
+
+export type MetricsReadMetricsStubResponse = (MetricsStubPublic);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;
