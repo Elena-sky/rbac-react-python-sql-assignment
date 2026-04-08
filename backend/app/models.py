@@ -3,7 +3,8 @@ from datetime import datetime, timezone
 from enum import Enum
 
 from pydantic import EmailStr
-from sqlalchemy import Column, DateTime, Enum as SAEnum
+from sqlalchemy import Column, DateTime
+from sqlalchemy import Enum as SAEnum
 from sqlmodel import Field, Relationship, SQLModel
 
 
