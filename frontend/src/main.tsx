@@ -7,6 +7,7 @@ import {
 import { createRouter, RouterProvider } from "@tanstack/react-router"
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
+import { toast } from "sonner"
 import { ApiError, OpenAPI } from "./client"
 import { ThemeProvider } from "./components/theme-provider"
 import { Toaster } from "./components/ui/sonner"
@@ -19,9 +20,20 @@ OpenAPI.TOKEN = async () => {
 }
 
 const handleApiError = (error: Error) => {
-  if (error instanceof ApiError && [401, 403].includes(error.status)) {
+  if (!(error instanceof ApiError)) {
+    return
+  }
+
+  if (error.status === 401) {
     localStorage.removeItem("access_token")
     window.location.href = "/login"
+    return
+  }
+
+  if (error.status === 403) {
+    toast.error("Access denied", {
+      description: "You do not have permission to perform this action.",
+    })
   }
 }
 const queryClient = new QueryClient({
