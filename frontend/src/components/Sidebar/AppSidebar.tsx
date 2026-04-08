@@ -27,7 +27,9 @@ export function AppSidebar() {
     ...(canViewMetrics
       ? [{ icon: ChartColumn, title: "Metrics", path: "/metrics" }]
       : []),
-    ...(canManageUsers ? [{ icon: Users, title: "Admin", path: "/admin" }] : []),
+    ...(canManageUsers
+      ? [{ icon: Users, title: "Admin", path: "/admin" }]
+      : []),
   ]
 
   return (
