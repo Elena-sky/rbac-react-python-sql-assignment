@@ -103,13 +103,29 @@ Relevant files:
 | Update own profile | yes | yes | yes |
 | Update any profile | yes | no | no |
 
-### Quick RBAC check
+### Manual E2E checklist
 
-- login as admin -> open `/metrics` (allowed)
-- login as manager -> open `/metrics` (allowed)
-- login as member -> open `/metrics` (redirected to `/forbidden`)
+Use the seeded accounts above. Expected UI and routes:
 
-## Architecture Notes
+**admin**
+
+- Sidebar: **Admin** and **Metrics** visible.
+- Open `/admin`: user table loads; **Add user** (or equivalent) available.
+- Open `/metrics`: page loads (stub JSON).
+
+**manager**
+
+- Sidebar: **Admin** and **Metrics** visible (list users, no create-user affordance).
+- Open `/admin`: list works; creating users is not allowed by matrix.
+- Open `/metrics`: page loads.
+
+**member**
+
+- Sidebar: **Admin** and **Metrics** not shown.
+- Open `/metrics` directly: redirected to `/forbidden` (or equivalent access-denied UX).
+- Open `/admin` directly: redirected to `/forbidden`.
+
+## Authorization approach
 
 Authorization is enforced in the backend with explicit FastAPI dependencies and helper functions. Route handlers declare access rules via dependencies instead of inline role checks spread across endpoint bodies. The core helpers are centralized in `backend/app/api/authz.py`.
 
@@ -118,6 +134,40 @@ Authorization is enforced in the backend with explicit FastAPI dependencies and 
 Frontend uses role-based capability helpers to drive UX decisions (navigation visibility, page access, action buttons). These checks improve usability and prevent confusing flows, but they are not a security boundary.
 
 Security guarantees are backend-first: direct API calls still hit backend authorization checks and return `403 Forbidden` when access is denied.
+
+### Extending roles (MVP trade-off)
+
+Adding a fourth role is intentionally not a one-line change: you would extend the role enum and policies in `backend/app/api/authz.py`, mirror capabilities in `frontend/src/lib/capabilities.ts`, update the permission matrix in this README, and adjust tests. That is expected for a small RBAC MVP rather than a dynamic policy engine.
+
+## Regenerate frontend API client
+
+After backend OpenAPI schema changes, regenerate the typed client under `frontend/src/client/`. Full steps (automatic script, manual dump, `bun run generate-client`) are documented in [`frontend/README.md`](frontend/README.md) in the **Generate Client** section. From the repo root:
+
+```bash
+bash ./scripts/generate-client.sh
+```
+
+## Design note (dependency-based RBAC)
+
+**Context:** The template already used FastAPI dependencies for authentication; extending that pattern for role checks keeps each endpoint’s policy visible at declaration time.
+
+**Decision:** Enforce access with small reusable dependencies in `backend/app/api/authz.py` and derive UI behavior from `getCapabilities(role)` on the frontend. Do not rely on the SPA as the security boundary.
+
+**Trade-off:** Simpler than a policy engine or permission tables; adding a new role touches a bounded set of files (see above), which is acceptable for this assignment.
+
+```mermaid
+flowchart LR
+  http[HttpRequest] --> authn[Authn_get_current_user]
+  authn --> authz[Authz_require_roles]
+  authz --> route[Route_handler]
+```
+
+```mermaid
+flowchart LR
+  nav[Browser] --> router[TanStack_Router]
+  router --> guard[requireCapability]
+  guard --> page[Page_or_Forbidden]
+```
 
 ## Additional Docs
 
