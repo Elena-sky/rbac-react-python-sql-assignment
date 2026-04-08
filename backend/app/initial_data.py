@@ -10,7 +10,13 @@ logger = logging.getLogger(__name__)
 
 def init() -> None:
     with Session(engine) as session:
-        init_db(session)
+        results = init_db(session)
+    logger.info(
+        "Seeded role users: admin=%s manager=%s member=%s",
+        results["admin"],
+        results["manager"],
+        results["member"],
+    )
 
 
 def main() -> None:
