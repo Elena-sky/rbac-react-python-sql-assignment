@@ -87,7 +87,9 @@ def test_read_item_not_enough_permissions(
 def test_read_item_as_member_owner_allowed(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    created_item = create_item_as_user(client, normal_user_token_headers, title="Member own")
+    created_item = create_item_as_user(
+        client, normal_user_token_headers, title="Member own"
+    )
     response = client.get(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=normal_user_token_headers,
@@ -98,7 +100,9 @@ def test_read_item_as_member_owner_allowed(
 
 def test_read_item_as_manager_owner_allowed(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    created_item = create_item_as_user(client, manager_headers, title="Manager own")
+    created_item = create_item_as_user(
+        client, manager_headers, title="Manager own"
+    )
     response = client.get(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=manager_headers,
@@ -111,7 +115,9 @@ def test_read_item_as_manager_foreign_forbidden(
     client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    member_item = create_item_as_user(client, normal_user_token_headers, title="Member item")
+    member_item = create_item_as_user(
+        client, normal_user_token_headers, title="Member item"
+    )
     response = client.get(
         f"{settings.API_V1_STR}/items/{member_item['id']}",
         headers=manager_headers,
@@ -138,7 +144,9 @@ def test_read_items_as_member_returns_only_own(
     client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     create_random_item(db)
-    own_item = create_item_as_user(client, normal_user_token_headers, title="Visible only mine")
+    own_item = create_item_as_user(
+        client, normal_user_token_headers, title="Visible only mine"
+    )
     member_id = current_user_id(client, normal_user_token_headers)
 
     response = client.get(f"{settings.API_V1_STR}/items/", headers=normal_user_token_headers)
@@ -152,7 +160,9 @@ def test_read_items_as_member_returns_only_own(
 def test_read_items_as_manager_returns_only_own(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
     create_random_item(db)
-    own_item = create_item_as_user(client, manager_headers, title="Manager visible own")
+    own_item = create_item_as_user(
+        client, manager_headers, title="Manager visible own"
+    )
     manager_id = current_user_id(client, manager_headers)
 
     response = client.get(f"{settings.API_V1_STR}/items/", headers=manager_headers)
@@ -213,7 +223,9 @@ def test_update_item_not_enough_permissions(
 def test_update_item_as_member_owner_allowed(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    created_item = create_item_as_user(client, normal_user_token_headers, title="Before update")
+    created_item = create_item_as_user(
+        client, normal_user_token_headers, title="Before update"
+    )
     response = client.put(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=normal_user_token_headers,
@@ -225,7 +237,9 @@ def test_update_item_as_member_owner_allowed(
 
 def test_update_item_as_manager_owner_allowed(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    created_item = create_item_as_user(client, manager_headers, title="Manager before")
+    created_item = create_item_as_user(
+        client, manager_headers, title="Manager before"
+    )
     response = client.put(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=manager_headers,
@@ -239,7 +253,9 @@ def test_update_item_as_manager_foreign_forbidden(
     client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    member_item = create_item_as_user(client, normal_user_token_headers, title="Member foreign")
+    member_item = create_item_as_user(
+        client, normal_user_token_headers, title="Member foreign"
+    )
     response = client.put(
         f"{settings.API_V1_STR}/items/{member_item['id']}",
         headers=manager_headers,
@@ -290,7 +306,9 @@ def test_delete_item_not_enough_permissions(
 def test_delete_item_as_member_owner_allowed(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    created_item = create_item_as_user(client, normal_user_token_headers, title="Delete mine")
+    created_item = create_item_as_user(
+        client, normal_user_token_headers, title="Delete mine"
+    )
     response = client.delete(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=normal_user_token_headers,
@@ -301,7 +319,9 @@ def test_delete_item_as_member_owner_allowed(
 
 def test_delete_item_as_manager_owner_allowed(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    created_item = create_item_as_user(client, manager_headers, title="Delete manager own")
+    created_item = create_item_as_user(
+        client, manager_headers, title="Delete manager own"
+    )
     response = client.delete(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=manager_headers,
@@ -314,7 +334,9 @@ def test_delete_item_as_manager_foreign_forbidden(
     client: TestClient, db: Session, normal_user_token_headers: dict[str, str]
 ) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    member_item = create_item_as_user(client, normal_user_token_headers, title="Member protected")
+    member_item = create_item_as_user(
+        client, normal_user_token_headers, title="Member protected"
+    )
     response = client.delete(
         f"{settings.API_V1_STR}/items/{member_item['id']}",
         headers=manager_headers,
