@@ -7,11 +7,10 @@ from sqlmodel import Session, select
 from app import crud
 from app.core.config import settings
 from app.core.security import verify_password
-from app.models import User, UserCreate, UserRole
+from app.models import User, UserCreate
 from tests.utils.user import (
     create_random_user,
     manager_token_headers,
-    user_authentication_headers,
 )
 from tests.utils.utils import random_email, random_lower_string
 

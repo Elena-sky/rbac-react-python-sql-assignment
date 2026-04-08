@@ -6,10 +6,10 @@ from fastapi import HTTPException, Request
 from app.api.authz import (
     get_effective_role,
     require_admin,
-    require_owner_or_admin,
     require_admin_or_manager,
     require_non_admin,
     require_not_self,
+    require_owner_or_admin,
     require_roles,
     require_self_or_admin,
 )
