@@ -5,6 +5,8 @@ from fastapi import HTTPException, Request
 
 from app.api.authz import (
     get_effective_role,
+    require_non_admin,
+    require_not_self,
     require_admin_or_manager,
     require_roles,
     require_self_or_admin,
@@ -68,3 +70,22 @@ def test_require_self_or_admin_denies_with_403() -> None:
         dependency(request, user)
     assert exc_info.value.status_code == 403
     assert exc_info.value.detail == "Forbidden"
+
+
+def test_require_non_admin_denies_admin_with_403() -> None:
+    dependency = require_non_admin()
+    admin = make_user(role=UserRole.ADMIN)
+    with pytest.raises(HTTPException) as exc_info:
+        dependency(admin)
+    assert exc_info.value.status_code == 403
+    assert exc_info.value.detail == "Super users are not allowed to delete themselves"
+
+
+def test_require_not_self_denies_self_with_403() -> None:
+    dependency = require_not_self("user_id")
+    user = make_user(role=UserRole.ADMIN)
+    request = make_request({"user_id": str(user.id)})
+    with pytest.raises(HTTPException) as exc_info:
+        dependency(request, user)
+    assert exc_info.value.status_code == 403
+    assert exc_info.value.detail == "Super users are not allowed to delete themselves"
