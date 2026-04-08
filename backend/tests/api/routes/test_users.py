@@ -184,7 +184,7 @@ def test_create_user_by_normal_user(
 
 
 def test_create_user_by_manager(client: TestClient, db: Session) -> None:
-    headers = manager_token_headers(client, db)
+    headers = manager_token_headers(client=client, db=db)
     data = {"email": random_email(), "password": random_lower_string()}
     r = client.post(f"{settings.API_V1_STR}/users/", headers=headers, json=data)
     assert r.status_code == 403

@@ -100,9 +100,7 @@ def test_read_item_as_member_owner_allowed(
 
 def test_read_item_as_manager_owner_allowed(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    created_item = create_item_as_user(
-        client, manager_headers, title="Manager own"
-    )
+    created_item = create_item_as_user(client, manager_headers, title="Manager own")
     response = client.get(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=manager_headers,
@@ -149,7 +147,9 @@ def test_read_items_as_member_returns_only_own(
     )
     member_id = current_user_id(client, normal_user_token_headers)
 
-    response = client.get(f"{settings.API_V1_STR}/items/", headers=normal_user_token_headers)
+    response = client.get(
+        f"{settings.API_V1_STR}/items/", headers=normal_user_token_headers
+    )
     assert response.status_code == 200
     content = response.json()
     assert content["count"] >= 1
@@ -157,12 +157,12 @@ def test_read_items_as_member_returns_only_own(
     assert all(item["owner_id"] == member_id for item in content["data"])
 
 
-def test_read_items_as_manager_returns_only_own(client: TestClient, db: Session) -> None:
+def test_read_items_as_manager_returns_only_own(
+    client: TestClient, db: Session
+) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
     create_random_item(db)
-    own_item = create_item_as_user(
-        client, manager_headers, title="Manager visible own"
-    )
+    own_item = create_item_as_user(client, manager_headers, title="Manager visible own")
     manager_id = current_user_id(client, manager_headers)
 
     response = client.get(f"{settings.API_V1_STR}/items/", headers=manager_headers)
@@ -237,9 +237,7 @@ def test_update_item_as_member_owner_allowed(
 
 def test_update_item_as_manager_owner_allowed(client: TestClient, db: Session) -> None:
     manager_headers = manager_token_headers(client=client, db=db)
-    created_item = create_item_as_user(
-        client, manager_headers, title="Manager before"
-    )
+    created_item = create_item_as_user(client, manager_headers, title="Manager before")
     response = client.put(
         f"{settings.API_V1_STR}/items/{created_item['id']}",
         headers=manager_headers,
