@@ -26,6 +26,7 @@ def upgrade():
         ),
     )
     op.execute(sa.text('UPDATE "user" SET role = \'admin\' WHERE is_superuser = true'))
+    op.alter_column("user", "role", server_default=None)
 
 
 def downgrade():
