@@ -22,16 +22,16 @@ def _seed_user(
 ) -> str:
     user = session.exec(select(User).where(User.email == email)).first()
     if not user:
-        user_in = UserCreate(
+        user_create = UserCreate(
             email=email,
             password=password,
             is_superuser=is_superuser,
             role=role,
         )
-        crud.create_user(session=session, user_create=user_in)
+        crud.create_user(session=session, user_create=user_create)
         return "created"
-    user_in = UserUpdate(role=role, is_superuser=is_superuser)
-    crud.update_user(session=session, db_user=user, user_in=user_in)
+    user_update = UserUpdate(role=role, is_superuser=is_superuser)
+    crud.update_user(session=session, db_user=user, user_in=user_update)
     return "updated"
 
 
