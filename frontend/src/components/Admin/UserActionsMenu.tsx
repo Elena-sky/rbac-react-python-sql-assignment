@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useAuth from "@/hooks/useAuth"
+import useCapabilities from "@/hooks/useCapabilities"
 import DeleteUser from "./DeleteUser"
 import EditUser from "./EditUser"
 
@@ -19,8 +20,9 @@ interface UserActionsMenuProps {
 export const UserActionsMenu = ({ user }: UserActionsMenuProps) => {
   const [open, setOpen] = useState(false)
   const { user: currentUser } = useAuth()
+  const { canEditAnyProfile } = useCapabilities()
 
-  if (user.id === currentUser?.id) {
+  if (!canEditAnyProfile || user.id === currentUser?.id) {
     return null
   }
 
