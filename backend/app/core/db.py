@@ -51,22 +51,22 @@ def init_db(session: Session) -> dict[str, str]:
         role=UserRole.ADMIN,
         is_superuser=True,
     )
-    manager_result = _seed_user(
-        session=session,
-        email=str(settings.MANAGER_USER_EMAIL),
-        password=settings.MANAGER_USER_PASSWORD,
-        role=UserRole.MANAGER,
-        is_superuser=False,
-    )
-    member_result = _seed_user(
-        session=session,
-        email=str(settings.MEMBER_USER_EMAIL),
-        password=settings.MEMBER_USER_PASSWORD,
-        role=UserRole.MEMBER,
-        is_superuser=False,
-    )
-    return {
-        "admin": admin_result,
-        "manager": manager_result,
-        "member": member_result,
-    }
+    results = {"admin": admin_result, "manager": "skipped", "member": "skipped"}
+
+    if settings.SEED_MANAGER_EMAIL and settings.SEED_MANAGER_PASSWORD:
+        results["manager"] = _seed_user(
+            session=session,
+            email=str(settings.SEED_MANAGER_EMAIL),
+            password=settings.SEED_MANAGER_PASSWORD,
+            role=UserRole.MANAGER,
+            is_superuser=False,
+        )
+    if settings.SEED_MEMBER_EMAIL and settings.SEED_MEMBER_PASSWORD:
+        results["member"] = _seed_user(
+            session=session,
+            email=str(settings.SEED_MEMBER_EMAIL),
+            password=settings.SEED_MEMBER_PASSWORD,
+            role=UserRole.MEMBER,
+            is_superuser=False,
+        )
+    return results

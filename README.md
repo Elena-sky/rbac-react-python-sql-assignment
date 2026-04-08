@@ -128,8 +128,6 @@ Before deploying it, make sure you change at least the values for:
 
 - `SECRET_KEY`
 - `FIRST_SUPERUSER_PASSWORD`
-- `MANAGER_USER_PASSWORD`
-- `MEMBER_USER_PASSWORD`
 - `POSTGRES_PASSWORD`
 
 You can (and should) pass these as environment variables from secrets.
@@ -143,14 +141,13 @@ Role seed users are created by `backend/scripts/prestart.sh` via `python app/ini
 Required role users:
 
 - `admin` from `FIRST_SUPERUSER` / `FIRST_SUPERUSER_PASSWORD`
-- `manager` from `MANAGER_USER_EMAIL` / `MANAGER_USER_PASSWORD`
-- `member` from `MEMBER_USER_EMAIL` / `MEMBER_USER_PASSWORD`
+- `manager` from `SEED_MANAGER_EMAIL` / `SEED_MANAGER_PASSWORD` (optional)
+- `member` from `SEED_MEMBER_EMAIL` / `SEED_MEMBER_PASSWORD` (optional)
 
 Default local values:
 
 - `admin@example.com`
-- `manager@example.com`
-- `member@example.com`
+- `manager` and `member` are seeded only when bootstrap env vars are set
 
 Seed contract:
 
@@ -167,7 +164,7 @@ python app/initial_data.py
 Quick verification:
 
 1. Login as admin at `POST /api/v1/login/access-token`
-2. Call `GET /api/v1/users/`
+2. Call `GET /api/v1/users/` (`admin|manager` access)
 3. Confirm users with roles `admin`, `manager`, `member` exist
 
 ### Generate Secret Keys
