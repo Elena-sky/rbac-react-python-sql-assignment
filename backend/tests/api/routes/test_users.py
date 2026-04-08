@@ -8,16 +8,12 @@ from app import crud
 from app.core.config import settings
 from app.core.security import verify_password
 from app.models import User, UserCreate, UserRole
-from tests.utils.user import create_random_user, user_authentication_headers
+from tests.utils.user import (
+    create_random_user,
+    manager_token_headers,
+    user_authentication_headers,
+)
 from tests.utils.utils import random_email, random_lower_string
-
-
-def manager_token_headers(client: TestClient, db: Session) -> dict[str, str]:
-    email = random_email()
-    password = random_lower_string()
-    manager_in = UserCreate(email=email, password=password, role=UserRole.MANAGER)
-    crud.create_user(session=db, user_create=manager_in)
-    return user_authentication_headers(client=client, email=email, password=password)
 
 
 def test_get_users_superuser_me(
@@ -219,7 +215,7 @@ def test_retrieve_users(
 
 
 def test_retrieve_users_as_manager(client: TestClient, db: Session) -> None:
-    headers = manager_token_headers(client, db)
+    headers = manager_token_headers(client=client, db=db)
     r = client.get(f"{settings.API_V1_STR}/users/", headers=headers)
     assert r.status_code == 200
     all_users = r.json()
@@ -231,6 +227,14 @@ def test_retrieve_users_unauthenticated(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/users/")
     assert r.status_code == 401
     assert r.json()["detail"] == "Not authenticated"
+
+
+def test_retrieve_users_as_member_forbidden(
+    client: TestClient, normal_user_token_headers: dict[str, str]
+) -> None:
+    r = client.get(f"{settings.API_V1_STR}/users/", headers=normal_user_token_headers)
+    assert r.status_code == 403
+    assert r.json()["detail"] == "Forbidden"
 
 
 def test_update_user_me(
@@ -432,7 +436,7 @@ def test_update_user_not_exists(
 
 
 def test_update_user_by_manager_forbidden(client: TestClient, db: Session) -> None:
-    headers = manager_token_headers(client, db)
+    headers = manager_token_headers(client=client, db=db)
     user = create_random_user(db)
     r = client.patch(
         f"{settings.API_V1_STR}/users/{user.id}",
@@ -574,7 +578,7 @@ def test_delete_user_by_manager_forbidden(
     client: TestClient,
     db: Session,
 ) -> None:
-    headers = manager_token_headers(client, db)
+    headers = manager_token_headers(client=client, db=db)
     user = create_random_user(db)
     r = client.delete(f"{settings.API_V1_STR}/users/{user.id}", headers=headers)
     assert r.status_code == 403
