@@ -318,6 +318,10 @@ export const UserCreateSchema = {
             ],
             title: 'Full Name'
         },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
+        },
         password: {
             type: 'string',
             maxLength: 128,
@@ -359,6 +363,10 @@ export const UserPublicSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
         },
         id: {
             type: 'string',
@@ -415,6 +423,12 @@ export const UserRegisterSchema = {
     title: 'UserRegister'
 } as const;
 
+export const UserRoleSchema = {
+    type: 'string',
+    enum: ['admin', 'manager', 'member'],
+    title: 'UserRole'
+} as const;
+
 export const UserUpdateSchema = {
     properties: {
         email: {
@@ -431,14 +445,26 @@ export const UserUpdateSchema = {
             title: 'Email'
         },
         is_active: {
-            type: 'boolean',
-            title: 'Is Active',
-            default: true
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
         },
         is_superuser: {
-            type: 'boolean',
-            title: 'Is Superuser',
-            default: false
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Superuser'
         },
         full_name: {
             anyOf: [
@@ -451,6 +477,16 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/UserRole'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         },
         password: {
             anyOf: [

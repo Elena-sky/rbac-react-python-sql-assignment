@@ -67,6 +67,7 @@ export type UserCreate = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: UserRole;
     password: string;
 };
 
@@ -75,6 +76,7 @@ export type UserPublic = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: UserRole;
     id: string;
     created_at?: (string | null);
 };
@@ -85,6 +87,8 @@ export type UserRegister = {
     full_name?: (string | null);
 };
 
+export type UserRole = 'admin' | 'manager' | 'member';
+
 export type UsersPublic = {
     data: Array<UserPublic>;
     count: number;
@@ -92,9 +96,10 @@ export type UsersPublic = {
 
 export type UserUpdate = {
     email?: (string | null);
-    is_active?: boolean;
-    is_superuser?: boolean;
+    is_active?: (boolean | null);
+    is_superuser?: (boolean | null);
     full_name?: (string | null);
+    role?: (UserRole | null);
     password?: (string | null);
 };
 
