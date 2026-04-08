@@ -24,6 +24,14 @@ const handleApiError = (error: Error) => {
     return
   }
 
+  const errorDetail =
+    typeof error.body === "object" &&
+    error.body !== null &&
+    "detail" in error.body &&
+    typeof error.body.detail === "string"
+      ? error.body.detail
+      : ""
+
   if (error.status === 401) {
     localStorage.removeItem("access_token")
     window.location.href = "/login"
@@ -31,6 +39,15 @@ const handleApiError = (error: Error) => {
   }
 
   if (error.status === 403) {
+    if (
+      errorDetail === "Could not validate credentials" ||
+      errorDetail === "Not authenticated"
+    ) {
+      localStorage.removeItem("access_token")
+      window.location.href = "/login"
+      return
+    }
+
     toast.error("Access denied", {
       description: "You do not have permission to perform this action.",
     })
