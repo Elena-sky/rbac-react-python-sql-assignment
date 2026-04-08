@@ -6,6 +6,9 @@ export type Capabilities = {
   canViewMetrics: boolean
   canEditOwnProfile: boolean
   canEditAnyProfile: boolean
+  canCreateItem: boolean
+  canEditItem: boolean
+  canDeleteItem: boolean
 }
 
 const defaultCapabilities: Capabilities = {
@@ -14,6 +17,9 @@ const defaultCapabilities: Capabilities = {
   canViewMetrics: false,
   canEditOwnProfile: false,
   canEditAnyProfile: false,
+  canCreateItem: false,
+  canEditItem: false,
+  canDeleteItem: false,
 }
 
 const capabilitiesByRole: Record<UserRole, Capabilities> = {
@@ -23,6 +29,9 @@ const capabilitiesByRole: Record<UserRole, Capabilities> = {
     canViewMetrics: true,
     canEditOwnProfile: true,
     canEditAnyProfile: true,
+    canCreateItem: true,
+    canEditItem: true,
+    canDeleteItem: true,
   },
   manager: {
     canManageUsers: true,
@@ -30,6 +39,9 @@ const capabilitiesByRole: Record<UserRole, Capabilities> = {
     canViewMetrics: true,
     canEditOwnProfile: true,
     canEditAnyProfile: false,
+    canCreateItem: true,
+    canEditItem: true,
+    canDeleteItem: true,
   },
   member: {
     canManageUsers: false,
@@ -37,6 +49,9 @@ const capabilitiesByRole: Record<UserRole, Capabilities> = {
     canViewMetrics: false,
     canEditOwnProfile: true,
     canEditAnyProfile: false,
+    canCreateItem: true,
+    canEditItem: true,
+    canDeleteItem: true,
   },
 }
 

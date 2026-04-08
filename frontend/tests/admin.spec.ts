@@ -228,8 +228,7 @@ test.describe("Admin page access control", () => {
     await page.goto("/admin")
 
     await expect(page.getByRole("heading", { name: "Users" })).toBeVisible()
-    await expect(
-      page.getByRole("button", { name: "Add User" }),
-    ).not.toBeVisible()
+    await expect(page.getByRole("button", { name: "Add User" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Add User" })).toBeDisabled()
   })
 })

@@ -10,6 +10,9 @@ test.describe("capabilities model", () => {
       canViewMetrics: true,
       canEditOwnProfile: true,
       canEditAnyProfile: true,
+      canCreateItem: true,
+      canEditItem: true,
+      canDeleteItem: true,
     })
   })
 
@@ -20,6 +23,9 @@ test.describe("capabilities model", () => {
       canViewMetrics: true,
       canEditOwnProfile: true,
       canEditAnyProfile: false,
+      canCreateItem: true,
+      canEditItem: true,
+      canDeleteItem: true,
     })
   })
 
@@ -30,6 +36,9 @@ test.describe("capabilities model", () => {
       canViewMetrics: false,
       canEditOwnProfile: true,
       canEditAnyProfile: false,
+      canCreateItem: true,
+      canEditItem: true,
+      canDeleteItem: true,
     })
   })
 
@@ -40,6 +49,9 @@ test.describe("capabilities model", () => {
       canViewMetrics: false,
       canEditOwnProfile: false,
       canEditAnyProfile: false,
+      canCreateItem: false,
+      canEditItem: false,
+      canDeleteItem: false,
     })
     expect(getCapabilities(undefined)).toEqual({
       canManageUsers: false,
@@ -47,6 +59,9 @@ test.describe("capabilities model", () => {
       canViewMetrics: false,
       canEditOwnProfile: false,
       canEditAnyProfile: false,
+      canCreateItem: false,
+      canEditItem: false,
+      canDeleteItem: false,
     })
   })
 })

@@ -8,6 +8,13 @@ import { DataTable } from "@/components/Common/DataTable"
 import AddItem from "@/components/Items/AddItem"
 import { columns } from "@/components/Items/columns"
 import PendingItems from "@/components/Pending/PendingItems"
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import useCapabilities from "@/hooks/useCapabilities"
 
 function getItemsQueryOptions() {
   return {
@@ -54,6 +61,8 @@ function ItemsTable() {
 }
 
 function Items() {
+  const { canCreateItem } = useCapabilities()
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -61,7 +70,20 @@ function Items() {
           <h1 className="text-2xl font-bold tracking-tight">Items</h1>
           <p className="text-muted-foreground">Create and manage your items</p>
         </div>
-        <AddItem />
+        {canCreateItem ? (
+          <AddItem />
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="my-4 inline-flex">
+                <Button disabled>Add Item</Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              You do not have permission to create items.
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
       <ItemsTable />
     </div>

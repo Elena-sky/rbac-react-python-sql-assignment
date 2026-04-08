@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { Suspense } from "react"
 
 import { type UserPublic, UsersService } from "@/client"
@@ -7,9 +7,15 @@ import AddUser from "@/components/Admin/AddUser"
 import { columns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
 import PendingUsers from "@/components/Pending/PendingUsers"
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import useAuth from "@/hooks/useAuth"
 import useCapabilities from "@/hooks/useCapabilities"
-import { getCapabilities } from "@/lib/capabilities"
+import { requireCapability } from "@/lib/route-guards"
 
 function getUsersQueryOptions() {
   return {
@@ -20,14 +26,8 @@ function getUsersQueryOptions() {
 
 export const Route = createFileRoute("/_layout/admin")({
   component: Admin,
-  beforeLoad: async () => {
-    const user = await UsersService.readUserMe()
-    const capabilities = getCapabilities(user.role)
-    if (!capabilities.canManageUsers) {
-      throw redirect({
-        to: "/",
-      })
-    }
+  beforeLoad: async ({ location }) => {
+    await requireCapability("canManageUsers", location.pathname)
   },
   head: () => ({
     meta: [
@@ -70,7 +70,20 @@ function Admin() {
             Manage user accounts and permissions
           </p>
         </div>
-        {canCreateUser ? <AddUser /> : null}
+        {canCreateUser ? (
+          <AddUser />
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="my-4 inline-flex">
+                <Button disabled>Add User</Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              You do not have permission to create users.
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
       <UsersTable />
     </div>
