@@ -134,6 +134,40 @@ You can (and should) pass these as environment variables from secrets.
 
 Read the [deployment.md](./deployment.md) docs for more details.
 
+### RBAC Seed Users (Epic 5)
+
+Role seed users are created by `backend/scripts/prestart.sh` via `python app/initial_data.py`.
+
+Required role users:
+
+- `admin` from `FIRST_SUPERUSER` / `FIRST_SUPERUSER_PASSWORD`
+- `manager` from `SEED_MANAGER_EMAIL` / `SEED_MANAGER_PASSWORD`
+- `member` from `SEED_MEMBER_EMAIL` / `SEED_MEMBER_PASSWORD`
+
+Default local values:
+
+- `admin@example.com`
+- `manager@example.com`
+- `member@example.com`
+
+Seed contract:
+
+- If role seed user exists, only `role` and `is_superuser` are updated
+- Passwords are never overwritten by seed
+- Non-seed users are never modified by seed
+
+Run seed manually from `backend/`:
+
+```bash
+python app/initial_data.py
+```
+
+Quick verification:
+
+1. Login as admin at `POST /api/v1/login/access-token`
+2. Call `GET /api/v1/users/` (`admin|manager` access)
+3. Confirm users with roles `admin`, `manager`, `member` exist
+
 ### Generate Secret Keys
 
 Some environment variables in the `.env` file have a default value of `changethis`.

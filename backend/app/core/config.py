@@ -93,6 +93,10 @@ class Settings(BaseSettings):
     EMAIL_TEST_USER: EmailStr = "test@example.com"
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
+    SEED_MANAGER_EMAIL: EmailStr
+    SEED_MANAGER_PASSWORD: str
+    SEED_MEMBER_EMAIL: EmailStr
+    SEED_MEMBER_PASSWORD: str
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
