@@ -53,9 +53,7 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     return UsersPublic(data=users_public, count=count)
 
 
-@router.post(
-    "/", dependencies=[Depends(require_admin())], response_model=UserPublic
-)
+@router.post("/", dependencies=[Depends(require_admin())], response_model=UserPublic)
 def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     """
     Create new user.
