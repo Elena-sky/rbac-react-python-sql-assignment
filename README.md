@@ -141,13 +141,14 @@ Role seed users are created by `backend/scripts/prestart.sh` via `python app/ini
 Required role users:
 
 - `admin` from `FIRST_SUPERUSER` / `FIRST_SUPERUSER_PASSWORD`
-- `manager` from `SEED_MANAGER_EMAIL` / `SEED_MANAGER_PASSWORD` (optional)
-- `member` from `SEED_MEMBER_EMAIL` / `SEED_MEMBER_PASSWORD` (optional)
+- `manager` from `SEED_MANAGER_EMAIL` / `SEED_MANAGER_PASSWORD`
+- `member` from `SEED_MEMBER_EMAIL` / `SEED_MEMBER_PASSWORD`
 
 Default local values:
 
 - `admin@example.com`
-- `manager` and `member` are seeded only when bootstrap env vars are set
+- `manager@example.com`
+- `member@example.com`
 
 Seed contract:
 
