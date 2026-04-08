@@ -205,7 +205,9 @@ test.describe("Admin page access control", () => {
     await expect(page.getByRole("heading", { name: "Users" })).toBeVisible()
   })
 
-  test("Manager can access admin page but cannot create users", async ({ page }) => {
+  test("Manager can access admin page but cannot create users", async ({
+    page,
+  }) => {
     const email = randomEmail()
     const password = randomPassword()
 
@@ -226,6 +228,8 @@ test.describe("Admin page access control", () => {
     await page.goto("/admin")
 
     await expect(page.getByRole("heading", { name: "Users" })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Add User" })).not.toBeVisible()
+    await expect(
+      page.getByRole("button", { name: "Add User" }),
+    ).not.toBeVisible()
   })
 })

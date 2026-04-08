@@ -45,7 +45,11 @@ export const columns: ColumnDef<UserTableData>[] = [
     cell: ({ row }) => {
       const role = row.original.role ?? "member"
       const { canEditAnyProfile } = getCapabilities(role)
-      return <Badge variant={canEditAnyProfile ? "default" : "secondary"}>{role}</Badge>
+      return (
+        <Badge variant={canEditAnyProfile ? "default" : "secondary"}>
+          {role}
+        </Badge>
+      )
     },
   },
   {

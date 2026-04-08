@@ -2,10 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Pencil } from "lucide-react"
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { type Resolver, useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { type UserPublic, type UserRole, UsersService } from "@/client"
+import { type UserPublic, UsersService } from "@/client"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -38,7 +38,7 @@ import {
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
 
-const roleOptions = ["admin", "manager", "member"] as const satisfies readonly UserRole[]
+const roleOptions = ["admin", "manager", "member"] as const
 
 const formSchema = z
   .object({
@@ -71,7 +71,7 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<FormData>,
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: {
@@ -97,7 +97,6 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
   })
 
   const onSubmit = (data: FormData) => {
-    // exclude confirm_password from submission data and remove password if empty
     const { confirm_password: _, ...submitData } = data
     if (!submitData.password) {
       delete submitData.password
