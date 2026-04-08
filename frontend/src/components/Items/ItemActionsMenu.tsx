@@ -32,7 +32,9 @@ export const ItemActionsMenu = ({ item }: ItemActionsMenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {canEditItem ? <EditItem item={item} onSuccess={() => setOpen(false)} /> : null}
+        {canEditItem ? (
+          <EditItem item={item} onSuccess={() => setOpen(false)} />
+        ) : null}
         {canDeleteItem ? (
           <DeleteItem id={item.id} onSuccess={() => setOpen(false)} />
         ) : null}

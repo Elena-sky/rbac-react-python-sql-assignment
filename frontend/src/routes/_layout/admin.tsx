@@ -6,15 +6,15 @@ import { type UserPublic, UsersService } from "@/client"
 import AddUser from "@/components/Admin/AddUser"
 import { columns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
-import { Button } from "@/components/ui/button"
 import PendingUsers from "@/components/Pending/PendingUsers"
-import useAuth from "@/hooks/useAuth"
-import useCapabilities from "@/hooks/useCapabilities"
+import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import useAuth from "@/hooks/useAuth"
+import useCapabilities from "@/hooks/useCapabilities"
 import { requireCapability } from "@/lib/route-guards"
 
 function getUsersQueryOptions() {

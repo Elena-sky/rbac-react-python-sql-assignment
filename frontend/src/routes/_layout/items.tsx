@@ -9,8 +9,12 @@ import AddItem from "@/components/Items/AddItem"
 import { columns } from "@/components/Items/columns"
 import PendingItems from "@/components/Pending/PendingItems"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import useCapabilities from "@/hooks/useCapabilities"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 function getItemsQueryOptions() {
   return {
@@ -75,7 +79,9 @@ function Items() {
                 <Button disabled>Add Item</Button>
               </span>
             </TooltipTrigger>
-            <TooltipContent>You do not have permission to create items.</TooltipContent>
+            <TooltipContent>
+              You do not have permission to create items.
+            </TooltipContent>
           </Tooltip>
         )}
       </div>
