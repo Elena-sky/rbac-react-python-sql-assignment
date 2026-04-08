@@ -21,6 +21,7 @@ def test_get_users_superuser_me(
     assert current_user["is_active"] is True
     assert current_user["is_superuser"]
     assert current_user["email"] == settings.FIRST_SUPERUSER
+    assert current_user["role"] == "admin"
 
 
 def test_get_users_normal_user_me(
@@ -32,6 +33,7 @@ def test_get_users_normal_user_me(
     assert current_user["is_active"] is True
     assert current_user["is_superuser"] is False
     assert current_user["email"] == settings.EMAIL_TEST_USER
+    assert current_user["role"] == "member"
 
 
 def test_create_user_new_email(
@@ -55,6 +57,7 @@ def test_create_user_new_email(
         user = crud.get_user_by_email(session=db, email=username)
         assert user
         assert user.email == created_user["email"]
+        assert created_user["role"] == "member"
 
 
 def test_get_existing_user_as_superuser(
@@ -74,6 +77,7 @@ def test_get_existing_user_as_superuser(
     existing_user = crud.get_user_by_email(session=db, email=username)
     assert existing_user
     assert existing_user.email == api_user["email"]
+    assert api_user["role"] == "member"
 
 
 def test_get_non_existing_user_as_superuser(
@@ -329,12 +333,14 @@ def test_register_user(client: TestClient, db: Session) -> None:
     created_user = r.json()
     assert created_user["email"] == username
     assert created_user["full_name"] == full_name
+    assert created_user["role"] == "member"
 
     user_query = select(User).where(User.email == username)
     user_db = db.exec(user_query).first()
     assert user_db
     assert user_db.email == username
     assert user_db.full_name == full_name
+    assert user_db.role == "member"
     verified, _ = verify_password(password, user_db.hashed_password)
     assert verified
 

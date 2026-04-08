@@ -318,6 +318,10 @@ export const UserCreateSchema = {
             ],
             title: 'Full Name'
         },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
+        },
         password: {
             type: 'string',
             maxLength: 128,
@@ -359,6 +363,10 @@ export const UserPublicSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
         },
         id: {
             type: 'string',
@@ -415,6 +423,12 @@ export const UserRegisterSchema = {
     title: 'UserRegister'
 } as const;
 
+export const UserRoleSchema = {
+    type: 'string',
+    enum: ['admin', 'manager', 'member'],
+    title: 'UserRole'
+} as const;
+
 export const UserUpdateSchema = {
     properties: {
         email: {
@@ -429,16 +443,6 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Email'
-        },
-        is_active: {
-            type: 'boolean',
-            title: 'Is Active',
-            default: true
-        },
-        is_superuser: {
-            type: 'boolean',
-            title: 'Is Superuser',
-            default: false
         },
         full_name: {
             anyOf: [
@@ -464,6 +468,38 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Password'
+        },
+        role: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/UserRole'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        is_active: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Active'
+        },
+        is_superuser: {
+            anyOf: [
+                {
+                    type: 'boolean'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Is Superuser'
         }
     },
     type: 'object',
