@@ -340,7 +340,7 @@ def test_register_user(client: TestClient, db: Session) -> None:
     assert user_db
     assert user_db.email == username
     assert user_db.full_name == full_name
-    assert user_db.role.value == "member"
+    assert user_db.role == "member"
     verified, _ = verify_password(password, user_db.hashed_password)
     assert verified
 

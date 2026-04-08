@@ -11,6 +11,7 @@ def get_datetime_utc() -> datetime:
     return datetime.now(timezone.utc)
 
 
+# Shared properties
 class UserRole(str, Enum):
     ADMIN = "admin"
     MANAGER = "manager"
@@ -36,6 +37,7 @@ class UserRegister(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
 
 
+# Properties to receive via API on update, all are optional
 class UserUpdate(UserBase):
     email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore[assignment]
     password: str | None = Field(default=None, min_length=8, max_length=128)
