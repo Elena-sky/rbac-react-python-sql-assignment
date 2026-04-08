@@ -444,6 +444,41 @@ export const UserUpdateSchema = {
             ],
             title: 'Email'
         },
+        full_name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 255
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Full Name'
+        },
+        password: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 128,
+                    minLength: 8
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Password'
+        },
+        role: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/UserRole'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
         is_active: {
             anyOf: [
                 {
@@ -465,41 +500,6 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Is Superuser'
-        },
-        full_name: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 255
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Full Name'
-        },
-        role: {
-            anyOf: [
-                {
-                    '$ref': '#/components/schemas/UserRole'
-                },
-                {
-                    type: 'null'
-                }
-            ]
-        },
-        password: {
-            anyOf: [
-                {
-                    type: 'string',
-                    maxLength: 128,
-                    minLength: 8
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Password'
         }
     },
     type: 'object',

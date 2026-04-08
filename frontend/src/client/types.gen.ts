@@ -96,11 +96,11 @@ export type UsersPublic = {
 
 export type UserUpdate = {
     email?: (string | null);
+    full_name?: (string | null);
+    password?: (string | null);
+    role?: (UserRole | null);
     is_active?: (boolean | null);
     is_superuser?: (boolean | null);
-    full_name?: (string | null);
-    role?: (UserRole | null);
-    password?: (string | null);
 };
 
 export type UserUpdateMe = {

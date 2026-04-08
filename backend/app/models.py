@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from enum import Enum
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime, String
+from sqlalchemy import Column, DateTime, Enum as SAEnum
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -38,8 +38,9 @@ class UserRegister(SQLModel):
 
 
 # Properties to receive via API on update, all are optional
-class UserUpdate(UserBase):
-    email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore[assignment]
+class UserUpdate(SQLModel):
+    email: EmailStr | None = Field(default=None, max_length=255)
+    full_name: str | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=128)
     role: UserRole | None = None
     is_active: bool | None = None
@@ -60,7 +61,18 @@ class UpdatePassword(SQLModel):
 class User(UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
-    role: UserRole = Field(default=UserRole.MEMBER, sa_type=String(20))
+    role: UserRole = Field(
+        default=UserRole.MEMBER,
+        sa_column=Column(
+            SAEnum(
+                UserRole,
+                native_enum=False,
+                values_callable=lambda enum_cls: [member.value for member in enum_cls],
+                length=20,
+            ),
+            nullable=False,
+        ),
+    )
     created_at: datetime | None = Field(
         default_factory=get_datetime_utc,
         sa_type=DateTime(timezone=True),  # type: ignore
