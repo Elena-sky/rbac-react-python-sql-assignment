@@ -1,0 +1,15 @@
+services:
+  ghost:
+    image: ghost:5
+    container_name: ghost
+    restart: unless-stopped
+    ports:
+      - "80:2368"
+    environment:
+      url: ${GHOST_URL}
+      NODE_ENV: production
+    volumes:
+      - ghost_content:/var/lib/ghost/content
+
+volumes:
+  ghost_content:
