@@ -8,6 +8,8 @@ services:
     environment:
       url: ${GHOST_URL}
       NODE_ENV: production
+      database__client: sqlite3
+      database__connection__filename: /var/lib/ghost/content/data/ghost.db
     volumes:
       - ghost_content:/var/lib/ghost/content
 

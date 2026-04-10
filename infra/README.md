@@ -8,7 +8,7 @@ This folder contains a minimal infra-only setup for the assignment:
 ## Files
 
 - `deploy.sh` - installs dependencies, configures tunnel/firewall, starts Ghost
-- `docker-compose.yml` - Ghost service definition
+- `docker-compose.yml` - Ghost service definition (SQLite storage under Ghost content volume)
 - `.env.example` - required environment variable placeholders
 
 ## Quick start
@@ -33,6 +33,14 @@ The script is safe to re-run for normal redeploys.
 
 Supported target:
 - Ubuntu or Debian based Hetzner VPS
+
+## Database mode
+
+This setup uses SQLite explicitly:
+- `database__client=sqlite3`
+- `database__connection__filename=/var/lib/ghost/content/data/ghost.db`
+
+Reason: a minimal single-node deployment without external MySQL dependency.
 
 ## SSH access (Tailscale only)
 
